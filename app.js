@@ -4,6 +4,7 @@
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const { NotFoundError } = require("./expressError");
 
@@ -27,6 +28,13 @@ app.use("/companies", companiesRoutes);
 app.use("/users", usersRoutes);
 app.use("/jobs", jobsRoutes);
 
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "frontend/build")));
+
+// Catch-all route to serve React's index.html for any unknown route
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
